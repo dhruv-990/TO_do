@@ -37,7 +37,20 @@ The application features:
    npm install
    ```
 
-3. **Start the application:**
+3. **Set up MongoDB:**
+   - Install MongoDB Community Server or use MongoDB Atlas
+   - See `DATABASE_SETUP.md` for detailed instructions
+
+4. **Configure environment variables:**
+   - Edit `config.env` file with your MongoDB connection string
+   - Update JWT secret for production
+
+5. **Seed the database:**
+   ```bash
+   npm run seed
+   ```
+
+6. **Start the application:**
    ```bash
    npm start
    ```
@@ -47,12 +60,12 @@ The application features:
    npm run dev
    ```
 
-4. **Open your browser and navigate to:**
+7. **Open your browser and navigate to:**
    ```
    http://localhost:3000
    ```
 
-5. **Sign up for a new account or use the demo account:**
+8. **Sign up for a new account or use the demo account:**
    - Email: `demo@example.com`
    - Password: `password`
 
@@ -98,18 +111,31 @@ The application provides a RESTful API with the following endpoints:
 
 ```
 todo-list-app/
-├── server.js          # Express.js server
-├── package.json       # Dependencies and scripts
-├── public/            # Frontend files
-│   ├── index.html     # Main HTML file
-│   ├── styles.css     # CSS styles
-│   └── script.js      # JavaScript functionality
-└── README.md          # This file
+├── server.js              # Express.js server
+├── package.json           # Dependencies and scripts
+├── config.env             # Environment variables
+├── models/                # Database models
+│   ├── User.js           # User model
+│   └── Todo.js           # Todo model
+├── utils/                 # Utility functions
+│   ├── database.js       # Database connection
+│   └── seeder.js         # Database seeder
+├── public/                # Frontend files
+│   ├── index.html        # Main HTML file
+│   ├── login.html        # Login page
+│   ├── signup.html       # Signup page
+│   ├── styles.css        # CSS styles
+│   ├── auth.css          # Authentication styles
+│   ├── script.js         # Main JavaScript
+│   └── auth.js           # Authentication JavaScript
+├── DATABASE_SETUP.md     # Database setup guide
+└── README.md             # This file
 ```
 
 ## Technologies Used
 
 - **Backend:** Express.js, Node.js
+- **Database:** MongoDB with Mongoose ODM
 - **Authentication:** JWT (JSON Web Tokens), bcryptjs
 - **Frontend:** Vanilla JavaScript, HTML5, CSS3
 - **Styling:** Custom CSS with modern design patterns
