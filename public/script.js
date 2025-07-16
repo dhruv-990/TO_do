@@ -3,10 +3,31 @@ class TodoApp {
         this.todos = [];
         this.currentFilter = 'all';
         this.editingId = null;
+        this.currentUser = null;
+        this.authToken = null;
         
+        this.checkAuthentication();
         this.initializeElements();
         this.bindEvents();
         this.loadTodos();
+    }
+
+    checkAuthentication() {
+        this.authToken = localStorage.getItem('authToken');
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        
+        if (!this.authToken || !this.currentUser) {
+            window.location.href = '/login';
+            return;
+        }
+        
+        // Display user info
+        const userInfo = document.getElementById('userInfo');
+        const username = document.getElementById('username');
+        if (userInfo && username) {
+            username.textContent = `Welcome, ${this.currentUser.username}!`;
+            userInfo.style.display = 'flex';
+        }
     }
 
     initializeElements() {
@@ -43,7 +64,20 @@ class TodoApp {
 
     async loadTodos() {
         try {
-            const response = await fetch('/api/todos');
+            const response = await fetch('/api/todos', {
+                headers: {
+                    'Authorization': `Bearer ${this.authToken}`
+                }
+            });
+            
+            if (response.status === 401) {
+                // Token expired or invalid
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                window.location.href = '/login';
+                return;
+            }
+            
             this.todos = await response.json();
             this.renderTodos();
             this.updateStats();
@@ -61,6 +95,7 @@ class TodoApp {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.authToken}`
                 },
                 body: JSON.stringify({ text })
             });
@@ -86,6 +121,7 @@ class TodoApp {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.authToken}`
                 },
                 body: JSON.stringify({ completed: !todo.completed })
             });
@@ -108,6 +144,7 @@ class TodoApp {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.authToken}`
                 },
                 body: JSON.stringify({ text: text.trim() })
             });
@@ -127,7 +164,10 @@ class TodoApp {
     async deleteTodo(id) {
         try {
             const response = await fetch(`/api/todos/${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.authToken}`
+                }
             });
 
             if (response.ok) {
@@ -149,7 +189,10 @@ class TodoApp {
     async clearCompleted() {
         try {
             const response = await fetch('/api/todos', {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.authToken}`
+                }
             });
 
             if (response.ok) {
@@ -290,4 +333,11 @@ class TodoApp {
 let todoApp;
 document.addEventListener('DOMContentLoaded', () => {
     todoApp = new TodoApp();
-}); 
+});
+
+// Logout function
+function logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    window.location.href = '/login';
+} 

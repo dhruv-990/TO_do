@@ -4,6 +4,8 @@ A beautiful and modern todo list application built with Express.js, featuring a 
 
 ## Features
 
+- ✅ **User Authentication** - Secure login and signup with JWT tokens
+- ✅ **User Management** - Each user has their own private todo list
 - ✅ **Add new todos** - Create new tasks with a clean input interface
 - ✅ **Mark as complete** - Toggle todo completion status with smooth animations
 - ✅ **Edit todos** - Double-click or use edit button to modify existing todos
@@ -14,6 +16,8 @@ A beautiful and modern todo list application built with Express.js, featuring a 
 - ✅ **Responsive design** - Works perfectly on desktop and mobile devices
 - ✅ **Modern UI** - Beautiful gradient design with smooth animations
 - ✅ **RESTful API** - Full CRUD operations via REST endpoints
+- ✅ **Password Security** - Bcrypt hashing for secure password storage
+- ✅ **Session Management** - JWT-based authentication with automatic logout
 
 ## Screenshots
 
@@ -48,26 +52,47 @@ The application features:
    http://localhost:3000
    ```
 
+5. **Sign up for a new account or use the demo account:**
+   - Email: `demo@example.com`
+   - Password: `password`
+
 ## API Endpoints
 
 The application provides a RESTful API with the following endpoints:
 
-### GET `/api/todos`
-- Returns all todos
+### Authentication Endpoints
 
-### POST `/api/todos`
-- Creates a new todo
+#### POST `/api/auth/signup`
+- Creates a new user account
+- Body: `{ "username": "user", "email": "user@example.com", "password": "password" }`
+
+#### POST `/api/auth/login`
+- Authenticates a user
+- Body: `{ "email": "user@example.com", "password": "password" }`
+
+### Todo Endpoints (Require Authentication)
+
+#### GET `/api/todos`
+- Returns all todos for the authenticated user
+- Headers: `Authorization: Bearer <token>`
+
+#### POST `/api/todos`
+- Creates a new todo for the authenticated user
+- Headers: `Authorization: Bearer <token>`
 - Body: `{ "text": "Todo description" }`
 
-### PUT `/api/todos/:id`
-- Updates a todo
+#### PUT `/api/todos/:id`
+- Updates a todo for the authenticated user
+- Headers: `Authorization: Bearer <token>`
 - Body: `{ "text": "Updated text", "completed": true }`
 
-### DELETE `/api/todos/:id`
-- Deletes a specific todo
+#### DELETE `/api/todos/:id`
+- Deletes a specific todo for the authenticated user
+- Headers: `Authorization: Bearer <token>`
 
-### DELETE `/api/todos`
-- Deletes all completed todos
+#### DELETE `/api/todos`
+- Deletes all completed todos for the authenticated user
+- Headers: `Authorization: Bearer <token>`
 
 ## Project Structure
 
@@ -85,6 +110,7 @@ todo-list-app/
 ## Technologies Used
 
 - **Backend:** Express.js, Node.js
+- **Authentication:** JWT (JSON Web Tokens), bcryptjs
 - **Frontend:** Vanilla JavaScript, HTML5, CSS3
 - **Styling:** Custom CSS with modern design patterns
 - **Icons:** Font Awesome

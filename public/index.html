@@ -11,8 +11,20 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1><i class="fas fa-check-circle"></i> Todo List</h1>
-            <p class="subtitle">Organize your tasks efficiently</p>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i class="fas fa-check-circle"></i> Todo List</h1>
+                    <p class="subtitle">Organize your tasks efficiently</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span id="username"></span>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <div class="todo-form">
